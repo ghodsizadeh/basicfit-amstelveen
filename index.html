@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BasicFit Schedule</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* You can add custom styles here if needed */
+    </style>
+    
+</head>
+<body class="flex flex-col h-screen">
+
+    <!-- Header -->
+    <header class="bg-orange-600 text-white p-4 text-center">
+        <h1 class="text-3xl font-bold">Amstelveen BasicFit  Schedule</h1>
+    </header>
+    
+    <!-- Content -->
+    
+    <main class=" container mx-auto p-4 flex-row" x-data="scheduleApp()">
+        <!-- Filter -->
+        <!-- Filter by day update seleced day using dropdown  hadr coded days use dutch days -->
+        <!-- default should be selected day -->
+        <div class="flex flex-row justify-center items-center mb-4">
+            <label for="day" class="mr-2">Filter by day:</label>
+            <select name="day" id="day" class="border border-gray-400 rounded-md p-1" x-model="selectedDay" >
+                <option value="maandag">Maandag</option>
+                <option value="dinsdag">Dinsdag</option>
+                <option value="woensdag">Woensdag</option>
+                <option value="donderdag">Donderdag</option>
+                <option value="vrijdag">Vrijdag</option>
+                <option value="zaterdag">Zaterdag</option>
+                <option value="zondag">Zondag</option>
+                <!-- all -->
+                <option value="all">All</option>
+            </select>
+        </div>
+
+     
+        <!-- Table -->
+        <table class="min-w-full bg-white">
+            <!-- Table Head -->
+            <thead class="bg-orange-500 text-white">
+                <tr>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Day</th>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Time</th>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Description</th>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Basic-Fit Name</th>
+                    <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Room</th>
+                </tr>
+            </thead>
+            <!-- Table Body -->
+            <tbody x-effect="filterScheduleByDay()" x-data>
+                <!-- use day and time as key -->
+                <template x-for="item in filteredSchedule" :key="item.day + item.time + item.room">
+                    <tr class="hover:bg-orange-100">
+                        <td class="text-left py-2 px-4" x-text="item.day"></td>
+                        <td class="text-left py-2 px-4" x-text="item.time"></td>
+                        <td class="text-left py-2 px-4" x-text="item.description"></td>
+                        <td class="text-left py-2 px-4" x-text="item.basicFitName"></td>
+                        <td class="text-left py-2 px-4" x-text="item.room"></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-orange-600 text-white p-4 text-center">
+        <p>Developed by 
+            <a href="https://www.linkedin.com/in/mehdi-ghodsizadeh-27401252/" class="underline hover:text-orange-300 text-white">
+                Mehdi Ghodsizadeh
+            </a>
+        </p>
+        <p>
+            Edit this page on
+            <a href="https://github.com/ghodsizadeh/basicfit-amstelveen-schedule" class="underline hover:text-orange-300 text-white">
+                GitHub
+            </a>
+            
+        </p>
+    </footer>
+
+    <script>
+        function scheduleApp() {
+            const schedule = [
+  { day: 'Maandag', time: '09:15 - 10:15', description: 'Fat Attack', basicFitName: 'Freedom Cardio', room: '1' },
+  { day: 'Maandag', time: '10:15 - 11:15', description: 'Low Shape', basicFitName: 'Freedom Cardio', room: '1' },
+  { day: 'Maandag', time: '11:15 - 12:15', description: 'High Shape', basicFitName: 'Freedom Strength', room: '1' },
+  { day: 'Maandag', time: '18:00 - 19:00', description: 'Fat Attack', basicFitName: 'Freedom Cardio', room: '1' },
+  { day: 'Maandag', time: '19:00 - 20:00', description: 'Bootycamp', basicFitName: 'Freedom Strength', room: '3' },
+  { day: 'Maandag', time: '19:00 - 20:00', description: 'Hatha Yoga', basicFitName: 'Freedom Yoga', room: 'Cycle' },
+  { day: 'Maandag', time: '19:15 - 20:15', description: 'Cycling', basicFitName: 'Freedom Cycle', room: '1' },
+  { day: 'Maandag', time: '20:00 - 21:00', description: 'Body Balance', basicFitName: 'Body Balance', room: '1' },
+  // ... more schedule entries
+  { day: 'Donderdag', time: '09:15 - 10:15', description: 'Low Shape', basicFitName: 'Freedom Cardio', room: '1' },
+  { day: 'Donderdag', time: '09:45 - 10:45', description: 'Hatha Yoga', basicFitName: 'Freedom Yoga', room: '3' },
+  { day: 'Donderdag', time: '10:15 - 11:15', description: 'Kick & Punch', basicFitName: 'Freedom Cardio', room: '1' },
+  { day: 'Donderdag', time: '13:30 - 14:30', description: 'Pilates', basicFitName: 'Freedom Pilates', room: '3' },
+  { day: 'Donderdag', time: '19:30 - 20:30', description: 'Cycling', basicFitName: 'Freedom Cycle', room: 'Cycle' },
+  { day: 'Donderdag', time: '20:00 - 21:00', description: 'Yin Yoga', basicFitName: 'Freedom Yoga', room: '3' }] 
+
+
+
+            return {
+                schedule :schedule    ,
+                filteredSchedule: [],
+
+                selectedDay: new Date().toLocaleDateString('nl-nl', { weekday: 'long' }).toLocaleLowerCase(),
+                
+                filterScheduleByDay() {
+                    if (this.selectedDay === 'all') {
+                        this.filteredSchedule = this.schedule;
+                        
+                    }
+                    else {
+                        this.filteredSchedule = this.schedule.filter(
+                            (item) => item.day.toLowerCase() === this.selectedDay.toLowerCase()
+                             //this.currentDay.toLowerCase()
+                        );
+                    }
+
+                    console.log(this.filteredSchedule,'xx',this.selectedDay, this.filteredSchedule.length)
+                },
+                // setSelectDay(day) {
+                //     this.selectedDay = day;
+                // },
+            }
+        }
+    </script>
+
+</body>
+</html>
